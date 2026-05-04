@@ -1,0 +1,443 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+
+/* ========== BASE ========== */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #ffe6f0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+#app, #main-content {
+    position: relative;
+    z-index: 2;
+}
+
+/* ========== WALKING BEAR LOADER STYLES ========== */
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    gap: 40px;
+    min-height: 400px;
+    max-width: 100%;
+}
+
+.bear-container {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    height: 140px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: #faeded;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.bear-gif {
+    width: 120px;
+    height: auto;
+    position: absolute;
+    left: 0;
+    animation: walk 2s infinite linear;
+}
+
+.progress-container {
+    width: 100%;
+    max-width: 400px;
+    height: 24px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    border: 3px solid #f8bbd9;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-fill {
+    height: 100%;
+    background-color: #e91e63;
+    border-radius: 10px;
+    animation: progress 2s infinite linear;
+    width: 0%;
+}
+
+@keyframes walk {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(220px);
+    }
+}
+
+@keyframes progress {
+    0% {
+        width: 0%;
+    }
+
+    100% {
+        width: 100%;
+    }
+}
+
+/* ========== BACKGROUND VIDEOS ========== */
+#desktopVideoBackground,
+#mobileVideoBackground {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* ========== MAIN LAYOUT WRAPPER ========== */
+.layout-wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background-color: #ffe6f0;
+    z-index: 2;
+}
+
+/* ========== CENTERED PAGE CONTENT ========== */
+.page-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    z-index: 4;
+    padding-top: 120px;
+    padding-bottom: 120px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+/* ========== MAIN LAYOUT FLEX WRAPPER ========== */
+.main-layout {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 1rem;
+    flex-wrap: wrap;
+    z-index: 3;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* ========== CENTER CONTENT COLUMN ========== */
+.center-content {
+    text-align: center;
+    position: relative;
+    z-index: 4;
+    padding: 1rem;
+    width: 100%;
+    max-width: 600px;
+}
+
+/* ========== TYPOGRAPHY & TEXT ========== */
+.greeting-text {
+    font-family: 'Great Vibes', cursive;
+    font-size: clamp(2rem, 8vw, 3.2rem);
+    color: #ff1493;
+    margin-bottom: 0.5rem;
+    position: relative;
+    z-index: 5;
+    line-height: 1.2;
+}
+
+.sub-text {
+    font-size: clamp(0.9rem, 3vw, 1.1rem);
+    color: #cc3366;
+    margin-bottom: 1rem;
+    font-style: italic;
+    position: relative;
+    z-index: 5;
+    line-height: 1.4;
+    padding: 0 10px;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.hearts {
+    font-size: clamp(1.2rem, 4vw, 1.8rem);
+    margin-bottom: 1rem;
+    animation: pulse 1.5s ease-in-out infinite;
+    position: relative;
+    z-index: 5;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+/* Bear image */
+.bear-top-center {
+    width: clamp(80px, 20vw, 120px);
+    height: auto;
+    margin-bottom: 0.3rem;
+    animation: bounce 3s infinite;
+    position: relative;
+    top: 75px;
+    z-index: 5;
+}
+/* Import a modern cursive font */
+@import url('https://fonts.googleapis.com/css2?family=Parisienne&display=swap');
+
+/* For mobile devices */
+@media (max-width: 768px) {
+    .greeting-text {
+        white-space: nowrap; /* Keep text in one line */
+        font-family: 'Parisienne', cursive; /* Elegant stylish cursive font */
+        font-size: clamp(1rem, 5vw, 2rem); /* Smaller heading size */
+    }
+
+    .bear-top-center {
+        width: clamp(100px, 25vw, 150px); /* Bigger bear */
+        top: 35px; /* Slightly above the heading */
+    }
+}
+
+/* Import a modern cursive font */
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
+
+
+/* ========== CELEBRATION BUTTON ========== */
+.celebrate-btn {
+    background: linear-gradient(45deg, #ff69b4, #ff1493);
+    color: white;
+    border: none;
+    padding: clamp(10px, 3vw, 12px) clamp(20px, 6vw, 28px);
+    font-size: clamp(1rem, 3.5vw, 1.3rem);
+    border-radius: 40px;
+    cursor: pointer;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, background 0.4s ease;
+    position: relative;
+    z-index: 100;
+    min-height: 44px;
+    touch-action: manipulation;
+}
+
+    .celebrate-btn:hover,
+    .celebrate-btn:focus {
+        background: linear-gradient(45deg, #ff1493, #ff69b4);
+        transform: scale(1.08);
+    }
+
+    .celebrate-btn:active {
+        transform: scale(0.98);
+    }
+
+/* ========== POPUP MESSAGE BOX ========== */
+.popup-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    background: #fff0f5;
+    border-radius: 24px;
+    padding: clamp(1rem, 4vw, 2rem);
+    box-shadow: 0 10px 40px rgba(255, 105, 180, 0.4);
+    z-index: 999;
+    max-width: min(700px, 90vw);
+    width: 90vw;
+    display: none;
+    flex-direction: row;
+    opacity: 0;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+    .popup-message.show {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+        display: flex;
+    }
+
+.popup-left, .popup-right {
+    flex: 1;
+    padding: clamp(0.5rem, 2vw, 1rem);
+    min-width: 0;
+}
+
+.popup-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+    .popup-left p {
+        margin: 0.5rem 0;
+        font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+        line-height: 1.5;
+        color: #d63384;
+    }
+
+    .popup-left button {
+        margin-top: 1rem;
+        padding: clamp(0.5rem, 2vw, 0.7rem) clamp(1rem, 3vw, 1.2rem);
+        font-size: clamp(0.8rem, 2.5vw, 1rem);
+        background: #ff66b2;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        color: white;
+        transition: transform 0.2s ease, background 0.3s ease;
+        min-height: 44px;
+        touch-action: manipulation;
+    }
+
+        .popup-left button:hover,
+        .popup-left button:focus {
+            background: #ff1493;
+            transform: scale(1.05);
+        }
+
+        .popup-left button:active {
+            transform: scale(0.98);
+        }
+
+.popup-right img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(255, 105, 180, 0.25);
+    transition: transform 0.3s ease, opacity 0.4s ease-in-out;
+}
+
+    .popup-right img:hover {
+        transform: scale(1.04);
+    }
+
+/* ========== CLOSE BUTTON ========== */
+.close-btn {
+    position: absolute;
+    top: clamp(0.5rem, 2vw, 0.8rem);
+    right: clamp(0.5rem, 2vw, 1rem);
+    font-size: clamp(1.2rem, 4vw, 1.6rem);
+    cursor: pointer;
+    color: #ff1493;
+    transition: transform 0.2s ease;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: manipulation;
+}
+
+    .close-btn:hover,
+    .close-btn:focus {
+        color: #d63384;
+        transform: scale(1.2);
+    }
+
+    .close-btn:active {
+        transform: scale(0.9);
+    }
+
+/* ========== CAKE IMAGE STATE ========== */
+.cake-lit {
+    opacity: 1;
+}
+
+.cake-unlit {
+    opacity: 0.8;
+}
+
+/* ========== CANVAS STYLING ========== */
+#animationCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 5;
+    pointer-events: none;
+}
+
+/* ========== ADDITIONAL ANIMATIONS ========== */
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+#celebration-effects {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* ========== FADE-IN ========== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#celebration-effects.active {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+/* ===== Hide videos based on screen size ===== */
+@media (max-width: 414px) {
+    #desktopVideoBackground {
+        display: none;
+    }
+}
+
+@media (min-width: 415px) {
+    #mobileVideoBackground {
+        display: none;
+    }
+}
