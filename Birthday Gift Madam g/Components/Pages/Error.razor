@@ -1,0 +1,32 @@
+﻿@page "/Error"
+@using System.Diagnostics
+
+<PageTitle>Error</PageTitle>
+
+<div style="text-align:center; margin-top: 5rem;">
+    <h1 style="color: #d63384; font-size: 2.5rem;">Oops, something went wrong.</h1>
+    <h2 style="color: #ff1493;">An error occurred while processing your request.</h2>
+
+    @if (ShowRequestId)
+    {
+        <p style="margin-top: 1rem;">
+            <strong style="color: #b03060;">Request ID:</strong>
+            <code>@RequestId</code>
+        </p>
+    }
+
+    <div style="margin-top: 3rem;">
+        <h3 style="color: #ff69b4;">Development Mode</h3>
+        <p>
+            Swapping to <strong>Development</strong> environment will display more detailed information about the error.
+        </p>
+        <p>
+            <strong style="color: #cc3366;">Don't enable Development environment in production.</strong>
+        </p>
+    </div>
+</div>
+
+@code {
+    private string? RequestId { get; set; } = Activity.Current?.Id;
+    private bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
+}

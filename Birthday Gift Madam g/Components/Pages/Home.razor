@@ -1,0 +1,118 @@
+﻿@page "/home"
+@inject IJSRuntime JS
+
+<!-- 🔗 Stylesheet -->
+<link href="app.css" rel="stylesheet" />
+
+<!-- 📱 Mobile Background Video -->
+<video id="mobileVideoBackground" autoplay muted loop playsinline preload="auto"
+       style="position:fixed;top:0;left:0;width:100%;height:100%;object-fit:cover;pointer-events:none;z-index:1;">
+    <source src="mobile-background.mp4" type="video/mp4" />
+</video>
+
+<!-- 💻 Desktop Background Video -->
+<video id="desktopVideoBackground" autoplay muted loop playsinline preload="auto"
+       style="position:fixed;top:0;left:0;width:100%;height:100%;object-fit:cover;pointer-events:none;z-index:1;">
+    <source src="desktop-background.mp4" type="video/mp4" />
+</video>
+
+<!-- ✨ Main Celebration Section -->
+<div class="main-layout">
+    <div class="center-content">
+        <img src="bear-loading-white.jpg" alt="Bear" class="bear-top-center" loading="eager" />
+        <h1 class="greeting-text">Happy Birthday Madam G! ❤️</h1>
+        <p class="sub-text">Today is all about celebrating you and the joy you bring to my life.</p>
+        <div class="hearts">❤️ 💖 💕 💘 💝 💗</div>
+
+        <!-- 🎉 Start Button -->
+        <button class="celebrate-btn" @onclick="TriggerCelebration" type="button">
+            Start the Celebration 🎉
+        </button>
+    </div>
+</div>
+
+<!-- 🎂 Celebration Popup -->
+@if (showMessage)
+{
+    <div id="messageBox" class="popup-message show">
+        <span class="close-btn" @onclick="HideMessage" role="button" tabindex="0">×</span>
+
+        <div class="popup-left">
+            <p>🎂 Happy Birthday, Sumaya !</p>
+            <p>Even the cake knows it's lucky to be yours.</p>
+            <p>Let's light up and celebrate your day.</p>
+            <p>Ready to blow them out?</p>
+            <button @onclick="BlowCandles" type="button">Blow Candles 🕯️</button>
+            <div id="wishMessage"></div>
+        </div>
+
+        <div class="popup-right">
+            <img id="cakeImage" src="cake_candles_off.jpg" alt="Birthday Cake" class="cake-unlit" />
+        </div>
+    </div>
+}
+
+<!-- 🌌 Fireworks Canvas (brought to front by JS) -->
+<canvas id="animationCanvas"></canvas>
+<div id="celebration-effects"></div>
+
+@code {
+    private bool showMessage = false;
+    private bool isMobile = false;
+
+    private async Task TriggerCelebration()
+    {
+        showMessage = true;
+        await JS.InvokeVoidAsync("continueCelebration");
+    }
+
+    private void HideMessage()
+    {
+        showMessage = false;
+    }
+
+    private async Task BlowCandles()
+    {
+        await JS.InvokeVoidAsync("blowCandles");
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+            return;
+
+        // Detect mobile first
+        try
+        {
+            isMobile = await JS.InvokeAsync<bool>("blazorHelpers.isMobile");
+        }
+        catch
+        {
+            isMobile = false;
+        }
+
+        // Always start bear animation
+        await JS.InvokeVoidAsync("startBearLoadingAnimation");
+
+        // On mobile, ensure video can start after first touch (Safari fix)
+        if (isMobile)
+        {
+            await JS.InvokeVoidAsync("eval", @"
+                document.addEventListener('touchstart', function startVideo() {
+                    var vid = document.getElementById('mobileVideoBackground');
+                    if (vid) { vid.play().catch(()=>{}); }
+                    document.removeEventListener('touchstart', startVideo);
+                });
+            ");
+        }
+
+        // Hide unused video depending on device
+        await JS.InvokeVoidAsync("eval", @"
+            if (window.innerWidth <= 768) {
+                document.getElementById('desktopVideoBackground').style.display = 'none';
+            } else {
+                document.getElementById('mobileVideoBackground').style.display = 'none';
+            }
+        ");
+    }
+}

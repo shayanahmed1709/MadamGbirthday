@@ -1,0 +1,226 @@
+﻿@page "/"
+@inject IJSRuntime JSRuntime
+@inject NavigationManager Navigation
+
+<div class="loading-container">
+    <div class="bear-container">
+        <img src="Screenshot-2025-08-06-01-30-53(1).gif" alt="Walking Bear" class="bear-gif" style="transform: translateX(@(BearPosition)px);">
+    </div>
+    <div class="progress-container">
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: @(ProgressPercentage)%"></div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .loading-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: clamp(15px, 4vw, 20px);
+        padding: clamp(15px, 4vw, 20px);
+        background-color: #fce4ec;
+        border-radius: clamp(8px, 2vw, 10px);
+        min-height: clamp(250px, 50vh, 300px);
+        width: 100%;
+        max-width: 500px;
+        margin: 0 auto;
+        box-sizing: border-box;
+    }
+
+    .bear-container {
+        position: relative;
+        width: 100%;
+        max-width: 300px;
+        height: clamp(80px, 15vh, 100px);
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        background-color: #fce4ec;
+        border-radius: clamp(6px, 1.5vw, 8px);
+        overflow: hidden;
+    }
+
+    .bear-gif {
+        width: clamp(60px, 15vw, 80px);
+        height: auto;
+        position: absolute;
+        left: 0;
+        transition: transform 0.1s ease;
+    }
+
+    .progress-container {
+        width: 100%;
+        max-width: 300px;
+        height: clamp(16px, 3vw, 20px);
+    }
+
+    .progress-bar {
+        width: 100%;
+        height: 100%;
+        background-color: transparent;
+        border: clamp(1px, 0.3vw, 2px) solid #f8bbd9;
+        border-radius: clamp(6px, 1.5vw, 10px);
+        overflow: hidden;
+        position: relative;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background-color: #e91e63;
+        border-radius: clamp(4px, 1vw, 8px);
+        transition: width 0.1s ease;
+    }
+
+    /* Mobile optimizations */
+    @@media (max-width: 480px) {
+        .loading-container {
+            padding: 15px;
+            gap: 15px;
+            min-height: 250px;
+        }
+
+        .bear-container {
+            height: 80px;
+        }
+
+        .bear-gif {
+            width: 60px;
+        }
+
+        .progress-container {
+            height: 16px;
+        }
+    }
+
+    /* Tablet optimizations */
+    @@media (min-width: 481px) and (max-width: 768px) {
+        .loading-container {
+            padding: 18px;
+            gap: 18px;
+            min-height: 280px;
+        }
+
+        .bear-container {
+            height: 90px;
+        }
+
+        .bear-gif {
+            width: 70px;
+        }
+
+        .progress-container {
+            height: 18px;
+        }
+    }
+
+    /* Desktop optimizations */
+    @@media (min-width: 769px) {
+        .loading-container {
+            padding: 20px;
+            gap: 20px;
+            min-height: 300px;
+        }
+
+        .bear-container {
+            height: 100px;
+        }
+
+        .bear-gif {
+            width: 80px;
+        }
+
+        .progress-container {
+            height: 20px;
+        }
+    }
+
+    /* Landscape orientation adjustments */
+    @@media (orientation: landscape) and (max-height: 600px) {
+        .loading-container {
+            min-height: 200px;
+            gap: 12px;
+            padding: 12px;
+        }
+
+        .bear-container {
+            height: 60px;
+        }
+
+        .bear-gif {
+            width: 50px;
+        }
+
+        .progress-container {
+            height: 14px;
+        }
+    }
+
+    /* High DPI displays */
+    @@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+        .bear-gif {
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+        }
+    }
+
+    /* Reduced motion preferences */
+    @@media (prefers-reduced-motion: reduce) {
+        .bear-gif {
+            transition: none;
+        }
+
+        .progress-fill {
+            transition: none;
+        }
+    }
+</style>
+
+@code {
+    private int ProgressPercentage { get; set; } = 0;
+    private int BearPosition { get; set; } = 0;
+    private Timer? animationTimer;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("playBackgroundMusic");
+            await JSRuntime.InvokeVoidAsync("hideAppPlaceholder");
+            StartLoading();
+        }
+
+        // Optional: Delay before transitioning to /home
+        await Task.Delay(3000);
+        Navigation.NavigateTo("/home");
+    }
+
+    private void StartLoading()
+    {
+        ProgressPercentage = 0;
+        BearPosition = 0;
+
+        animationTimer = new Timer(async _ =>
+        {
+            await InvokeAsync(() =>
+            {
+                if (ProgressPercentage < 100)
+                {
+                    ProgressPercentage += 1;
+                    BearPosition = (int)(220 * ProgressPercentage / 100.0);
+                    StateHasChanged();
+                }
+                else
+                {
+                    animationTimer?.Dispose();
+                }
+            });
+        }, null, 0, 50);
+    }
+
+    public void Dispose()
+    {
+        animationTimer?.Dispose();
+    }
+}

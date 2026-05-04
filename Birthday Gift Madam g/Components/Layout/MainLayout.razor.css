@@ -1,0 +1,89 @@
+#blazor-error-ui {
+    background: lightyellow;
+    bottom: 0;
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+    display: none;
+    left: 0;
+    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+    font-size: clamp(0.8rem, 2.5vw, 1rem);
+}
+
+#blazor-error-ui .dismiss {
+    cursor: pointer;
+    position: absolute;
+    right: 0.75rem;
+    top: 0.5rem;
+    padding: 0.5rem;
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Responsive error UI */
+@media (max-width: 480px) {
+    #blazor-error-ui {
+        padding: 0.5rem 1rem 0.6rem 1rem;
+    }
+    
+    #blazor-error-ui .dismiss {
+        right: 0.5rem;
+        top: 0.25rem;
+    }
+}
+
+/* Layout wrapper responsive adjustments */
+.layout-wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background-color: #ffe6f0;
+    z-index: 2;
+    overflow-x: hidden;
+}
+
+.page-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    z-index: 4;
+    padding: clamp(60px, 8vh, 120px) clamp(15px, 4vw, 40px) clamp(60px, 8vh, 120px) clamp(15px, 4vw, 40px);
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+/* Mobile optimizations */
+@media (max-width: 480px) {
+    .page-content {
+        padding: 60px 15px 60px 15px;
+    }
+}
+
+/* Tablet optimizations */
+@media (min-width: 481px) and (max-width: 768px) {
+    .page-content {
+        padding: 80px 20px 80px 20px;
+    }
+}
+
+/* Desktop optimizations */
+@media (min-width: 769px) {
+    .page-content {
+        padding: 120px 40px 120px 40px;
+    }
+}
+
+/* Landscape mode adjustments */
+@media (orientation: landscape) and (max-height: 600px) {
+    .page-content {
+        padding: 40px 20px 40px 20px;
+    }
+}

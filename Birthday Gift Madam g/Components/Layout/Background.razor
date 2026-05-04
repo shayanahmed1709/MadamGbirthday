@@ -1,0 +1,64 @@
+﻿@implements IDisposable
+@inject IJSRuntime JS
+
+<!-- Always show desktop images in the background -->
+<div style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:-2;">
+    <img src="flag.jpg" style="width:100%;height:33%;object-fit:cover;display:block;" />
+    <img src="center.jpg" style="width:100%;height:34%;object-fit:cover;display:block;" />
+    <img src="bottom.jpg" style="width:100%;height:33%;object-fit:cover;display:block;" />
+</div>
+
+<!-- Mobile video overlay -->
+<video id="mobileVideoBackground"
+       autoplay muted loop playsinline preload="auto"
+       style="position:fixed;top:0;left:0;width:100%;height:100%;
+              object-fit:cover;z-index:-1;display:@(isMobile ? "block" : "none");">
+    <source src="mobile-background.mp4" type="video/mp4" />
+</video>
+
+@code {
+    private bool isMobile;
+    private DotNetObjectReference<Background>? objRef;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+
+        try
+        {
+            isMobile = await JS.InvokeAsync<bool>("blazorHelpers.isMobile");
+        }
+        catch
+        {
+            isMobile = false; // default to desktop
+        }
+
+        StateHasChanged(); // re-render to show/hide video
+
+        try
+        {
+            objRef = DotNetObjectReference.Create(this);
+            await JS.InvokeVoidAsync("blazorHelpers.registerResizeCallback", objRef);
+        }
+        catch
+        {
+            // ignore registration failures
+        }
+    }
+
+    [JSInvokable]
+    public Task OnResize(bool mobile)
+    {
+        if (isMobile != mobile)
+        {
+            isMobile = mobile;
+            InvokeAsync(StateHasChanged);
+        }
+        return Task.CompletedTask;
+    }
+
+    public void Dispose()
+    {
+        objRef?.Dispose();
+    }
+}
