@@ -209,6 +209,9 @@ DocProject/Help/html
 # Click-Once directory
 publish/
 
+# Local publish output folder used during Vercel setup
+Birthday Gift Madam g/publish_out/
+
 # Publish Web Output
 *.[Pp]ublish.xml
 *.azurePubxml
