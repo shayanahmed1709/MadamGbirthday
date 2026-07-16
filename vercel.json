@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "buildCommand": "sh vercel-build.sh",
+  "outputDirectory": "Birthday Gift Madam g/bin/Release/net8.0/publish/wwwroot",
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/index.html" }
+  ]
+}
