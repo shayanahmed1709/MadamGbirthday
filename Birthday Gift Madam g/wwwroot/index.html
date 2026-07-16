@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -14,96 +14,59 @@
     <title>Happy Birthday Madam G</title>
 
     <link rel="icon" href="favicon.png" type="image/png" />
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Great+Vibes&display=swap" rel="stylesheet" />
     <link href="app.css" rel="stylesheet" />
+    <style>
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.82; }
+        }
+    </style>
 </head>
 
 <body>
 
-    <!-- 📱 Mobile Background Video -->
-    <video id="mobileVideoBackground" autoplay muted loop playsinline preload="auto"
-           style="position:fixed;top:0;left:0;width:100%;height:100%;object-fit:cover;pointer-events:none;">
-        <source src="mobile-background.mp4" type="video/mp4">
-    </video>
-
-    <!-- 💻 Desktop Background Video -->
-    <video id="desktopVideoBackground" autoplay muted loop playsinline preload="auto"
-           style="position:fixed;top:0;left:0;width:100%;height:100%;object-fit:cover;pointer-events:none;">
-        <source src="desktop-background.mp4" type="video/mp4">
-    </video>
-
-    <!-- 🎂 First Popup: Candles OFF -->
-    <div id="messageBox" class="popup-message">
-        <span class="close-btn" onclick="window.closeMessageBox()">×</span>
-        <div class="popup-left">
-            <p>🎂 Happy Birthday, Sumaya !</p>
-            <p>Even the cake knows it's lucky to be yours.</p>
-            <p>Let's light up and celebrate your day.</p>
-            <p>Ready to blow them out?</p>
-            <button onclick="window.blowCandles()">Blow Candles 🕯️</button>
-            <div id="wishMessage"></div>
-        </div>
-        <div class="popup-right">
-            <div id="cake-container">
-                <img id="cakeImage" src="cake_candles_off.jpg" class="cake-unlit" alt="Birthday Cake" />
-            </div>
-        </div>
-    </div>
-
-    <!-- 🎊 Second Popup: Candles ON -->
-    <div id="celebrationBox" class="popup-message" style="display: none;">
-        <span class="close-btn" onclick="this.parentElement.style.display='none'">×</span>
-        <div class="popup-left">
-            <p>🔥 Candles lit! The celebration begins</p>
-            <p>😘 Happy Birthday my Jaan 😍 !</p>
-            <p>❤️ Your smile is my favorite view.</p>
-            <p>💖 With you every day feels special!</p>
-            <p>✨ To phir kesa laga ye ... !</p>
-        </div>
-        <div class="popup-right">
-            <div id="cake-container">
-                <img src="cake_candles_on.jpg" class="cake-lit" alt="Lit Birthday Cake" />
-            </div>
-        </div>
-    </div>
-
-    <!-- 🎵 Background Music -->
-    <audio id="bgMusic" loop>
-        <source src="romantic.mp3" type="audio/mpeg" />
-    </audio>
-
-
     <!-- ⏳ App Placeholder -->
     <div id="app-placeholder" style="
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
         height: 100vh;
-        background-color: #fce4ec;
-        font-family: 'Great Vibes', cursive;
-        font-size: clamp(18px, 4vw, 24px);
-        color: #e91e63;
+        background-color: #ffe6f0;
+        font-family: 'Dancing Script', 'Great Vibes', 'Georgia', cursive, serif;
+        font-size: clamp(2.2rem, 8vw, 3.8rem);
+        color: #ff1493;
+        text-shadow: 2px 2px 5px rgba(255, 20, 147, 0.2);
         z-index: 9999;
         position: fixed;
         top: 0;
         left: 0;
         width: 100vw;
         text-align: center;
-        padding: 20px;">
-        Bss Thora sa Intizar orr ...
+        padding: 20px;
+        box-sizing: border-box;
+        letter-spacing: 1px;">
+        <span style="animation: pulse 1.5s ease-in-out infinite; display: inline-block;">Bss Thora sa Intizar orr...</span>
     </div>
 
     <!-- 🔹 Blazor App Root -->
     <div id="app"></div>
 
-    <!-- 🌌 Fireworks Canvas -->
-    <canvas id="animationCanvas"></canvas>
+    <!-- 📦 JScex & Love Tree Scripts (Global dependency) -->
+    <script src="jscex/jquery.min.js"></script>
+    <script src="jscex/jscex.min.js"></script>
+    <script src="jscex/jscex-parser.js"></script>
+    <script src="jscex/jscex-jit.js"></script>
+    <script src="jscex/jscex-builderbase.min.js"></script>
+    <script src="jscex/jscex-async.min.js"></script>
+    <script src="jscex/jscex-async-powerpack.min.js"></script>
+    <script src="jscex/love.js" charset="utf-8"></script>
 
-    <!-- 📜 Scripts -->
+    <!-- 📜 App Logic Scripts -->
     <script src="script.js"></script>
+    <script src="tree-animation.js"></script>
     <script src="birthday.js"></script>
-
-    <!-- 📦 External helper (mobile detection) -->
     <script src="blazorHelpers.js"></script>
 
     <!-- Fallback if BlazorHelpers.js fails -->
@@ -112,15 +75,6 @@
             isMobile: function () { return window.innerWidth <= 768; },
             registerResizeCallback: function () { /* no-op fallback */ }
         };
-    </script>
-
-    <!-- Hide unused video depending on device -->
-    <script>
-        if (window.innerWidth <= 768) {
-            document.getElementById('desktopVideoBackground').style.display = 'none';
-        } else {
-            document.getElementById('mobileVideoBackground').style.display = 'none';
-        }
     </script>
 
     <!-- 🚀 Load Blazor after everything else -->

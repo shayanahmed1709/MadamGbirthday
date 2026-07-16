@@ -1,4 +1,4 @@
-﻿// 🎉 Starts the Celebration & Expands the Message Box
+// 🎉 Starts the Celebration & Expands the Message Box
 window.continueCelebration = function () {
     const box = document.getElementById('messageBox');
     if (box) {
@@ -38,29 +38,43 @@ window.blowCandles = function () {
         newPopup.style.display = 'flex';
         setTimeout(() => {
             newPopup.classList.add('show');
+            window.typewriterCelebration?.();
         }, 100);
     }
 
     const cake = document.getElementById('cakeImage');
     if (cake) {
-        cake.src = 'cake_candles_on.jpg';
+        cake.src = 'cake_candles_on.gif';
         cake.classList.remove('cake-unlit');
         cake.classList.add('cake-lit');
     }
 
-    window.startConfetti?.();
     window.showFlame?.();
+    window.activateCanvas();
+    window.startSnowfall();
+    window.releaseBalloons();
 };
 
-// 🎶 Single-Instance Music Playback
-let musicStarted = false;
+// 🎶 Unified Music Playback
 window.playBackgroundMusic = function () {
-    if (musicStarted) return;
-    musicStarted = true;
-
     const audio = document.getElementById("bgMusic");
-    if (audio) {
+    if (audio && audio.paused) {
         audio.play().catch(err => console.warn("🎶 Music playback blocked:", err));
+    }
+};
+
+// 🎬 Pause/Resume Music for Video
+window.pauseBackgroundMusic = function () {
+    const audio = document.getElementById("bgMusic");
+    if (audio && !audio.paused) {
+        audio.pause();
+    }
+};
+
+window.resumeBackgroundMusic = function () {
+    const audio = document.getElementById("bgMusic");
+    if (audio && audio.paused) {
+        audio.play().catch(err => console.warn("🎶 Music resume blocked:", err));
     }
 };
 
@@ -159,40 +173,87 @@ window.showFlame = function () {
     setTimeout(() => flame.remove(), 4000);
 };
 
-// 🎊 Confetti Effect
-window.startConfetti = function () {
-    const canvas = document.getElementById("animationCanvas");
-    if (!canvas) return;
+// 🎬 Video Playback for "View Surprise"
+window.playVideoSurprise = function () {
+    const videoContainer = document.getElementById('videoContainer');
+    const video = document.getElementById('surpriseVideo');
+    
+    if (!videoContainer || !video) return;
 
-    const ctx = canvas.getContext("2d");
-    let confetti = [];
+    // Pause background music
+    window.pauseBackgroundMusic();
 
-    for (let i = 0; i < 150; i++) {
-        confetti.push({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height - canvas.height,
-            r: Math.random() * 6 + 4,
-            color: `hsl(${Math.random() * 360}, 80%, 55%)`,
-            speed: Math.random() * 2 + 1
-        });
+    // Hide all popup messages
+    const popups = document.querySelectorAll('.popup-message');
+    popups.forEach(p => {
+        p.style.display = 'none';
+        p.classList.remove('show');
+    });
+
+    // Hide background videos
+    const bgVideos = document.querySelectorAll('video[id*="Background"]');
+    bgVideos.forEach(v => {
+        v.style.opacity = '0';
+        v.style.pointerEvents = 'none';
+    });
+
+    // Hide all canvases (tree and snow effects)
+    const canvases = document.querySelectorAll('canvas');
+    canvases.forEach(c => {
+        c.style.opacity = '0';
+        c.style.pointerEvents = 'none';
+    });
+
+    // Show video container
+    videoContainer.style.display = 'flex';
+    setTimeout(() => {
+        videoContainer.style.opacity = '1';
+    }, 50);
+    
+    // Play video
+    video.play().catch(err => console.warn("🎬 Video playback blocked:", err));
+};
+
+// 🎬 Close video and resume celebration
+window.closeVideoSurprise = function () {
+    const videoContainer = document.getElementById('videoContainer');
+    const video = document.getElementById('surpriseVideo');
+    
+    if (!videoContainer || !video) return;
+
+    // Pause video
+    video.pause();
+    video.currentTime = 0;
+
+    // Resume background music
+    window.resumeBackgroundMusic();
+
+    // Show background videos again
+    const bgVideos = document.querySelectorAll('video[id*="Background"]');
+    bgVideos.forEach(v => {
+        v.style.opacity = '1';
+        v.style.pointerEvents = 'auto';
+    });
+
+    // Show canvases again
+    const canvases = document.querySelectorAll('canvas');
+    canvases.forEach(c => {
+        c.style.opacity = '1';
+        c.style.pointerEvents = 'auto';
+    });
+
+    // Restore celebration box
+    const celebrationBox = document.getElementById('celebrationBox');
+    if (celebrationBox) {
+        celebrationBox.style.display = 'flex';
+        celebrationBox.classList.add('show');
     }
 
-    function drawConfetti() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        for (let c of confetti) {
-            ctx.beginPath();
-            ctx.arc(c.x, c.y, c.r, 0, 2 * Math.PI);
-            ctx.fillStyle = c.color;
-            ctx.fill();
-            c.y += c.speed;
-            if (c.y > canvas.height) {
-                c.y = -10;
-                c.x = Math.random() * canvas.width;
-            }
-        }
-    }
-
-    setInterval(drawConfetti, 30);
+    // Hide video container
+    videoContainer.style.opacity = '0';
+    setTimeout(() => {
+        videoContainer.style.display = 'none';
+    }, 300);
 };
 
 // 🧪 Fallback DOM Trigger

@@ -1,4 +1,4 @@
-﻿@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
 
 /* ========== BASE ========== */
 * {
@@ -127,10 +127,12 @@ body {
     align-items: center;
     text-align: center;
     z-index: 4;
-    padding-top: 120px;
-    padding-bottom: 120px;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding: 20px;
+    box-sizing: border-box;
+    height: 100vh;
+    min-height: 100vh;
+    max-height: 100vh;
+    overflow: hidden;
 }
 
 /* ========== MAIN LAYOUT FLEX WRAPPER ========== */
@@ -206,13 +208,14 @@ body {
 
 /* Bear image */
 .bear-top-center {
-    width: clamp(80px, 20vw, 120px);
+    width: clamp(70px, 15vw, 110px); /* Bolder, responsive and larger bear JPG */
     height: auto;
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.8rem;
     animation: bounce 3s infinite;
     position: relative;
-    top: 75px;
+    top: 0px;
     z-index: 5;
+    display: inline-block;
 }
 /* Import a modern cursive font */
 @import url('https://fonts.googleapis.com/css2?family=Parisienne&display=swap');
@@ -226,8 +229,8 @@ body {
     }
 
     .bear-top-center {
-        width: clamp(100px, 25vw, 150px); /* Bigger bear */
-        top: 35px; /* Slightly above the heading */
+        width: clamp(80px, 18vw, 120px); /* Prominent and responsive bear on mobile */
+        top: 0px;
     }
 }
 
@@ -269,18 +272,19 @@ body {
     left: 50%;
     transform: translate(-50%, -50%) scale(0.9);
     background: #fff0f5;
-    border-radius: 24px;
-    padding: clamp(1rem, 4vw, 2rem);
-    box-shadow: 0 10px 40px rgba(255, 105, 180, 0.4);
+    border-radius: 20px;
+    padding: clamp(0.8rem, 3vw, 1.5rem); /* Slightly more compact padding */
+    box-shadow: 0 10px 40px rgba(255, 105, 180, 0.35);
     z-index: 999;
-    max-width: min(700px, 90vw);
+    max-width: min(640px, 90vw); /* Slightly smaller max-width for better page fitting */
     width: 90vw;
     display: none;
     flex-direction: row;
     opacity: 0;
     transition: transform 0.4s ease, opacity 0.4s ease;
-    max-height: 90vh;
+    max-height: 85vh; /* Fits comfortably on smaller screens */
     overflow-y: auto;
+    box-sizing: border-box;
 }
 
     .popup-message.show {
@@ -289,16 +293,22 @@ body {
         display: flex;
     }
 
-.popup-left, .popup-right {
-    flex: 1;
-    padding: clamp(0.5rem, 2vw, 1rem);
-    min-width: 0;
-}
-
 .popup-left {
+    flex: 1.1; /* Perfectly balanced for the cursive font */
+    padding: clamp(0.3rem, 1.5vw, 0.6rem);
+    min-width: 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
+}
+
+.popup-right {
+    flex: 1.1; /* Sized perfectly to display the full large cake GIF card */
+    padding: clamp(0.3rem, 1.5vw, 0.6rem);
+    min-width: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
     .popup-left p {
@@ -439,5 +449,274 @@ body {
 @media (min-width: 415px) {
     #mobileVideoBackground {
         display: none;
+    }
+}
+
+/* ========== TYPEWRITER TEXT EFFECT ========== */
+.message-text {
+    min-height: 1.2em;
+    color: #ff1493;
+    font-size: clamp(1.1rem, 2.8vw, 1.45rem);
+    line-height: 1.35;
+    margin: 0.35rem 0;
+    font-family: 'Dancing Script', 'Great Vibes', cursive !important;
+    text-shadow: 1px 1px 2px rgba(255, 20, 147, 0.12);
+}
+
+.celebration-text {
+    min-height: 1.2em;
+    color: #ff1493;
+    font-size: clamp(1.1rem, 2.8vw, 1.45rem);
+    line-height: 1.35;
+    margin: 0.35rem 0;
+    font-family: 'Dancing Script', 'Great Vibes', cursive !important;
+    text-shadow: 1px 1px 2px rgba(255, 20, 147, 0.12);
+}
+
+/* ========== VIEW SURPRISE BUTTON ========== */
+.view-surprise-btn {
+    background: linear-gradient(45deg, #ff1493, #ff69b4);
+    color: white;
+    border: none;
+    padding: clamp(0.6rem, 2vw, 0.8rem) clamp(1.2rem, 3vw, 1.5rem);
+    font-size: clamp(0.85rem, 2.5vw, 1rem);
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 1.2rem;
+    transition: transform 0.2s ease, background 0.3s ease, box-shadow 0.3s ease;
+    min-height: 44px;
+    touch-action: manipulation;
+    box-shadow: 0 4px 12px rgba(255, 20, 147, 0.3);
+    font-weight: 600;
+}
+
+.view-surprise-btn:hover,
+.view-surprise-btn:focus {
+    background: linear-gradient(45deg, #ff69b4, #ff1493);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(255, 20, 147, 0.4);
+}
+
+.view-surprise-btn:active {
+    transform: translateY(0);
+}
+
+/* ========== VIDEO CONTAINER ========== */
+#videoContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000000;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+#videoContainer.active {
+    opacity: 1;
+    display: flex;
+}
+
+#surpriseVideo {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 10px;
+    box-shadow: 0 0 40px rgba(255, 255, 255, 0.2);
+}
+
+.close-video-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 1001;
+    transition: transform 0.2s ease, background 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-video-btn:hover,
+.close-video-btn:focus {
+    transform: scale(1.1);
+    background: #ff1493;
+    color: white;
+}
+
+.close-video-btn:active {
+    transform: scale(0.95);
+}
+
+/* ========== TREE CANVAS STYLING ========== */
+#wrap {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 1100px;
+    height: 680px;
+    transform: translate(-50%, -50%);
+    transform-origin: center center;
+    pointer-events: auto;
+    transition: opacity 0.5s ease, left 0.5s ease;
+}
+
+@media (min-width: 769px) {
+    #wrap {
+        left: 67% !important; /* Move tree canvas slightly further right on desktop to leave center space */
+    }
+}
+
+#treeCanvas, #canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* ========== RESPONSIVE ADJUSTMENTS ========== */
+@media (max-width: 768px) {
+    .popup-message {
+        flex-direction: column;
+        padding: clamp(0.8rem, 3vw, 1.2rem);
+    }
+
+    .popup-left, .popup-right {
+        flex: 1;
+        width: 100%;
+        min-width: 100%;
+    }
+
+    .popup-right img {
+        margin-top: 1rem;
+        max-height: 220px;
+    }
+
+    #videoContainer {
+        padding: 10px;
+    }
+
+    #surpriseVideo {
+        max-width: 95%;
+        max-height: 85%;
+    }
+
+    .close-video-btn {
+        top: 10px;
+        right: 10px;
+        width: 36px;
+        height: 36px;
+        font-size: 20px;
+    }
+}
+
+/* ========== GREETING CONTAINER WRAPPER ========== */
+.center-content-wrapper {
+    position: fixed;
+    top: 50%;
+    left: 29%; /* Shifted closer to the center for a cohesive, balanced design */
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    transition: opacity 0.5s ease;
+    width: 380px; /* Marginally narrower to improve screen space on 100% zoom */
+    pointer-events: auto;
+}
+
+.center-content {
+    text-align: center;
+    width: 100%;
+}
+
+.greeting-text {
+    font-family: 'Dancing Script', 'Great Vibes', cursive !important;
+    font-size: clamp(1.8rem, 3.5vw, 2.5rem) !important; /* Significantly more compact and beautifully responsive */
+    color: #ff1493 !important;
+    text-shadow: 2px 2px 4px rgba(255, 20, 147, 0.22) !important;
+    margin-bottom: 1rem !important;
+    line-height: 1.3 !important;
+    min-height: 1.5em;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+    .center-content-wrapper {
+        left: 50% !important;
+        top: 50% !important;
+        width: 90% !important;
+    }
+    
+    #wrap {
+        opacity: 0.35 !important; /* Soft backdrop on mobile for maximum readability */
+    }
+}
+
+/* ========== CAKE WRAPPER & CSS SMOKE EFFECT ========== */
+.cake-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 320px; /* Large beautiful cake GIF size */
+}
+
+.smoke-container {
+    position: absolute;
+    top: 15%; /* Placed elegantly above the candle flames */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 100px;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.smoke-puff {
+    position: absolute;
+    background: radial-gradient(circle, rgba(230, 230, 230, 0.6) 0%, rgba(230, 230, 230, 0) 70%);
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    animation: floatSmoke 2.5s infinite ease-out;
+}
+
+.smoke-puff:nth-child(2) {
+    left: 20px;
+    animation-delay: 0.7s;
+}
+
+.smoke-puff:nth-child(3) {
+    left: 35px;
+    animation-delay: 1.4s;
+}
+
+@keyframes floatSmoke {
+    0% {
+        transform: translateY(0) scale(0.6);
+        opacity: 0;
+    }
+    15% {
+        opacity: 0.55;
+    }
+    85% {
+        opacity: 0.1;
+    }
+    100% {
+        transform: translateY(-55px) scale(1.8);
+        opacity: 0;
     }
 }

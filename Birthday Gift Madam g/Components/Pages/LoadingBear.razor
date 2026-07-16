@@ -1,19 +1,41 @@
-﻿@page "/"
+@page "/"
+@implements IDisposable
 @inject IJSRuntime JSRuntime
 @inject NavigationManager Navigation
 
-<div class="loading-container">
-    <div class="bear-container">
-        <img src="Screenshot-2025-08-06-01-30-53(1).gif" alt="Walking Bear" class="bear-gif" style="transform: translateX(@(BearPosition)px);">
-    </div>
-    <div class="progress-container">
-        <div class="progress-bar">
-            <div class="progress-fill" style="width: @(ProgressPercentage)%"></div>
+@if (!IsBearLoadingComplete)
+{
+    <div class="loading-container">
+        <div class="bear-container">
+            <img src="Screenshot-2025-08-06-01-30-53(1).gif" alt="Walking Bear" class="bear-gif" style="transform: translateX(@(BearPosition)px);">
+        </div>
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: @(ProgressPercentage)%"></div>
+            </div>
         </div>
     </div>
-</div>
+}
+else
+{
+    <!-- 🌳 Tree Animation Canvas Container (from birthdaysurprise) -->
+    <div id="wrap">
+        <canvas id="canvas"></canvas>
+    </div>
+}
 
 <style>
+    /* Fixed wrap layout for scaling tree canvas */
+    #wrap {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 1100px;
+        height: 680px;
+        transform: translate(-50%, -50%);
+        transform-origin: center center;
+    }
+
     .loading-container {
         display: flex;
         flex-direction: column;
@@ -27,6 +49,21 @@
         max-width: 500px;
         margin: 0 auto;
         box-sizing: border-box;
+    }
+
+    .loading-title {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: clamp(1.2rem, 5vw, 1.8rem);
+        color: #d63384;
+        text-align: center;
+        margin: 0;
+        font-weight: 600;
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    @@keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.7; }
     }
 
     .bear-container {
@@ -180,20 +217,19 @@
 @code {
     private int ProgressPercentage { get; set; } = 0;
     private int BearPosition { get; set; } = 0;
+    private bool IsBearLoadingComplete { get; set; } = false;
     private Timer? animationTimer;
+    private DotNetObjectReference<LoadingBear>? selfRef;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            await JSRuntime.InvokeVoidAsync("playBackgroundMusic");
+            selfRef = DotNetObjectReference.Create(this);
+            await JSRuntime.InvokeVoidAsync("registerLoaderRef", selfRef);
             await JSRuntime.InvokeVoidAsync("hideAppPlaceholder");
             StartLoading();
         }
-
-        // Optional: Delay before transitioning to /home
-        await Task.Delay(3000);
-        Navigation.NavigateTo("/home");
     }
 
     private void StartLoading()
@@ -203,7 +239,7 @@
 
         animationTimer = new Timer(async _ =>
         {
-            await InvokeAsync(() =>
+            await InvokeAsync(async () =>
             {
                 if (ProgressPercentage < 100)
                 {
@@ -214,13 +250,25 @@
                 else
                 {
                     animationTimer?.Dispose();
+                    IsBearLoadingComplete = true;
+                    StateHasChanged();
+                    
+                    // Initialize the tree animation canvas flow
+                    await JSRuntime.InvokeVoidAsync("initTreeAnimationOnLoader");
                 }
             });
-        }, null, 0, 50);
+        }, null, 0, 30); // Ticks every 30ms so loader completes in ~3 seconds
+    }
+
+    [JSInvokable]
+    public void OnTreeAnimationComplete()
+    {
+        Navigation.NavigateTo("/home");
     }
 
     public void Dispose()
     {
         animationTimer?.Dispose();
+        selfRef?.Dispose();
     }
 }

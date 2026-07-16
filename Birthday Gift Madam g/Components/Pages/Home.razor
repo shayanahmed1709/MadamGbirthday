@@ -1,7 +1,7 @@
-﻿@page "/home"
+@page "/home"
 @inject IJSRuntime JS
 
-<!-- 🔗 Stylesheet -->
+<!-- 🔗 Stylesheets -->
 <link href="app.css" rel="stylesheet" />
 
 <!-- 📱 Mobile Background Video -->
@@ -16,59 +16,113 @@
     <source src="desktop-background.mp4" type="video/mp4" />
 </video>
 
-<!-- ✨ Main Celebration Section -->
-<div class="main-layout">
-    <div class="center-content">
-        <img src="bear-loading-white.jpg" alt="Bear" class="bear-top-center" loading="eager" />
-        <h1 class="greeting-text">Happy Birthday Madam G! ❤️</h1>
-        <p class="sub-text">Today is all about celebrating you and the joy you bring to my life.</p>
-        <div class="hearts">❤️ 💖 💕 💘 💝 💗</div>
+<!-- ❤️ Tree Canvas with Responsive Wrapper -->
+<div id="wrap" style="position: absolute; top: 50%; left: 50%; width: 1100px; height: 680px; transform: translate(-50%, -50%); transform-origin: center center; pointer-events: none; z-index: 2; transition: opacity 0.5s ease;">
+    <canvas id="treeCanvas" width="1100" height="680" style="width: 100%; height: 100%;"></canvas>
+</div>
 
-        <!-- 🎉 Start Button -->
-        <button class="celebrate-btn" @onclick="TriggerCelebration" type="button">
-            Start the Celebration 🎉
-        </button>
+<!-- 🎈 Greeting Center-Left Content (Bouncing Bear, Greeting Text, and Start Button) -->
+<div id="greetingContainer" class="center-content-wrapper">
+    <div class="center-content">
+        <img class="bear-top-center" src="bear-loading-white.jpg" alt="Cute Bear" />
+        <h1 id="greetingHeading" class="greeting-text">Happy Birthday Madam G</h1>
+        <button class="celebrate-btn" @onclick="StartCelebrationFlow" type="button">Start Celebration</button>
     </div>
 </div>
 
 <!-- 🎂 Celebration Popup -->
-@if (showMessage)
-{
-    <div id="messageBox" class="popup-message show">
-        <span class="close-btn" @onclick="HideMessage" role="button" tabindex="0">×</span>
+<div id="messageBox" class="popup-message" style="display:none;">
+    <span class="close-btn" @onclick="HideMessage" role="button" tabindex="0">×</span>
 
-        <div class="popup-left">
-            <p>🎂 Happy Birthday, Sumaya !</p>
-            <p>Even the cake knows it's lucky to be yours.</p>
-            <p>Let's light up and celebrate your day.</p>
-            <p>Ready to blow them out?</p>
-            <button @onclick="BlowCandles" type="button">Blow Candles 🕯️</button>
-            <div id="wishMessage"></div>
-        </div>
+    <div class="popup-left">
+        <p class="message-text">Happy Birthday, My Pretty Girl 🎂 </p>
+        <p class="message-text">May your Birthday Be As Bright As your Smile </p>
+        <p class="message-text">And Beautiful As your Heart ❤️ </p>
+        <p class="message-text">Ready to blow them out ?</p>
+        <button @onclick="BlowCandles" type="button" style="opacity: 0; pointer-events: none; transition: opacity 0.5s ease;">Blow Candles 🕯️</button>
+        <div id="wishMessage"></div>
+    </div>
 
-        <div class="popup-right">
-            <img id="cakeImage" src="cake_candles_off.jpg" alt="Birthday Cake" class="cake-unlit" />
+    <div class="popup-right">
+        <div class="cake-wrapper">
+            <img id="cakeImage" src="cake_candles_off.gif" alt="Birthday Cake" class="cake-unlit" />
+            <!-- Smoke Overlay for Blown Candles -->
+            <div class="smoke-container" id="messageSmoke" style="display: none;">
+                <div class="smoke-puff"></div>
+                <div class="smoke-puff" style="left:20px; animation-delay:0.7s;"></div>
+                <div class="smoke-puff" style="left:35px; animation-delay:1.4s;"></div>
+            </div>
         </div>
     </div>
-}
+</div>
 
-<!-- 🌌 Fireworks Canvas (brought to front by JS) -->
+<!-- 🎉 Candles Lit Message with Video Button -->
+<div id="celebrationBox" class="popup-message" style="display:none;">
+    <span class="close-btn" @onclick="HideCelebration" role="button" tabindex="0">×</span>
+
+    <div class="popup-left">
+        <p class="celebration-text">🕯️ Candles lit, the celebration begins...</p>
+        <p class="celebration-text">😘 Happy Birthday my Rodnoy !</p>
+        <p class="celebration-text">❤️ Your smile is my favorite view .</p>
+        <p class="celebration-text">💖 With you every day feels special !</p>
+        <p class="celebration-text">Ek surprise orr.. 🎁</p>
+        <button class="view-surprise-btn" @onclick="PlayVideoSurprise" type="button" style="opacity: 0; pointer-events: none; transition: opacity 0.5s ease;">
+            View Surprise 🎬
+        </button>
+    </div>
+
+    <div class="popup-right">
+        <div class="cake-wrapper">
+            <img id="celebrationImage" src="cake_candles_on.gif" alt="Celebration" class="cake-lit" />
+            <!-- Smoke Overlay for Lit Candles -->
+            <div class="smoke-container" id="celebrationSmoke" style="display: block;">
+                <div class="smoke-puff"></div>
+                <div class="smoke-puff" style="left:20px; animation-delay:0.7s;"></div>
+                <div class="smoke-puff" style="left:35px; animation-delay:1.4s;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 🎬 Video Container -->
+<div id="videoContainer" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgb(0,0,0);z-index:1000;opacity:0;transition:opacity 0.3s ease;flex-direction:column;justify-content:center;align-items:center;">
+    <button class="close-video-btn" @onclick="CloseVideoSurprise" style="position:absolute;top:20px;right:20px;background:white;border:none;border-radius:50%;width:40px;height:40px;font-size:24px;cursor:pointer;z-index:1001;">×</button>
+    <video id="surpriseVideo" style="max-width:90%;max-height:90%;border-radius:10px;">
+        <source src="findingher.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+</div>
+
+<!-- 🌌 Snowfall & Effects Canvas -->
 <canvas id="animationCanvas"></canvas>
 <div id="celebration-effects"></div>
 
 @code {
-    private bool showMessage = false;
-    private bool isMobile = false;
-
-    private async Task TriggerCelebration()
+    private async Task HideMessage()
     {
-        showMessage = true;
-        await JS.InvokeVoidAsync("continueCelebration");
+        await JS.InvokeVoidAsync("eval", @"
+            document.getElementById('messageBox').classList.remove('show');
+            setTimeout(() => {
+                document.getElementById('messageBox').style.display = 'none';
+                window.restoreGreetingAndTree?.();
+            }, 400);
+        ");
     }
 
-    private void HideMessage()
+    private async Task HideCelebration()
     {
-        showMessage = false;
+        await JS.InvokeVoidAsync("eval", @"
+            document.getElementById('celebrationBox').classList.remove('show');
+            setTimeout(() => {
+                document.getElementById('celebrationBox').style.display = 'none';
+                window.restoreGreetingAndTree?.();
+            }, 400);
+        ");
+    }
+
+    private async Task StartCelebrationFlow()
+    {
+        await JS.InvokeVoidAsync("startCelebrationFlowJS");
     }
 
     private async Task BlowCandles()
@@ -76,43 +130,52 @@
         await JS.InvokeVoidAsync("blowCandles");
     }
 
+    private async Task PlayVideoSurprise()
+    {
+        await JS.InvokeVoidAsync("playVideoSurprise");
+    }
+
+    private async Task CloseVideoSurprise()
+    {
+        await JS.InvokeVoidAsync("closeVideoSurprise");
+    }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (!firstRender)
             return;
 
-        // Detect mobile first
-        try
-        {
-            isMobile = await JS.InvokeAsync<bool>("blazorHelpers.isMobile");
-        }
-        catch
-        {
-            isMobile = false;
-        }
+        // Draw the finished tree onto the tree canvas
+        await JS.InvokeVoidAsync("drawFinishedTree");
 
-        // Always start bear animation
-        await JS.InvokeVoidAsync("startBearLoadingAnimation");
-
-        // On mobile, ensure video can start after first touch (Safari fix)
-        if (isMobile)
-        {
-            await JS.InvokeVoidAsync("eval", @"
-                document.addEventListener('touchstart', function startVideo() {
-                    var vid = document.getElementById('mobileVideoBackground');
-                    if (vid) { vid.play().catch(()=>{}); }
-                    document.removeEventListener('touchstart', startVideo);
-                });
-            ");
-        }
+        // Start sequential typewriter for heading
+        await JS.InvokeVoidAsync("typewriterHeading");
 
         // Hide unused video depending on device
         await JS.InvokeVoidAsync("eval", @"
             if (window.innerWidth <= 768) {
                 document.getElementById('desktopVideoBackground').style.display = 'none';
+                document.getElementById('mobileVideoBackground').style.display = 'block';
             } else {
                 document.getElementById('mobileVideoBackground').style.display = 'none';
+                document.getElementById('desktopVideoBackground').style.display = 'block';
             }
+        ");
+
+        // Start background music loop (if not already playing)
+        await JS.InvokeVoidAsync("playBackgroundMusic");
+
+        // Touch support for mobile Safari fix
+        await JS.InvokeVoidAsync("eval", @"
+            document.addEventListener('touchstart', function startVideo() {
+                var vid = document.getElementById('mobileVideoBackground');
+                if (vid) { vid.play().catch(()=>{}); }
+                var vid2 = document.getElementById('desktopVideoBackground');
+                if (vid2) { vid2.play().catch(()=>{}); }
+                document.removeEventListener('touchstart', startVideo);
+            });
         ");
     }
 }
+
+

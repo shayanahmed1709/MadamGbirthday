@@ -1,9 +1,14 @@
-﻿@inherits LayoutComponentBase
+@inherits LayoutComponentBase
 
 <div class="layout-wrapper">
     <div class="page-content">
         @Body
     </div>
+
+    <!-- 🎥 Global Background Music -->
+    <audio id="bgMusic" loop>
+        <source src="romantic.mpeg" type="audio/mpeg">
+    </audio>
 
     <!-- Sparkle Effects -->
     <div id="sparkle"></div>

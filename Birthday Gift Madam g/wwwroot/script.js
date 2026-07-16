@@ -1,4 +1,4 @@
-﻿// ✅ Make hideAppPlaceholder globally available BEFORE Blazor loads
+// ✅ Make hideAppPlaceholder globally available BEFORE Blazor loads
 window.hideAppPlaceholder = () => {
     const placeholder = document.getElementById("app-placeholder");
     if (!placeholder) {
@@ -109,46 +109,20 @@ const resizeCanvasForDevice = (canvas) => {
     });
 })();
 
-// 🎵 Auto-play music after first user interaction
+// 🎵 Unified Auto-play music trigger on first user interaction
 (function () {
-    const audio = new Audio('romantic.mp3');
-    audio.loop = true;
-    audio.volume = 0.3; // Lower volume for mobile
-
-    let hasPlayed = false;
-
     const tryPlay = () => {
-        if (hasPlayed) return;
-        hasPlayed = true;
-
-        // Mobile-friendly audio play
-        const playPromise = audio.play();
-        if (playPromise !== undefined) {
-            playPromise.catch(err => {
-                console.warn("🎶 Music playback failed:", err);
-            });
+        if (window.playBackgroundMusic) {
+            window.playBackgroundMusic();
+            
+            // Remove listeners after first trigger
+            document.removeEventListener('click', tryPlay, { passive: true });
+            document.removeEventListener('keydown', tryPlay, { passive: true });
+            document.removeEventListener('scroll', tryPlay, { passive: true });
+            document.removeEventListener('touchstart', tryPlay, { passive: true });
         }
-
-        // Fade in volume
-        audio.volume = 0;
-        let vol = 0;
-        const fadeIn = setInterval(() => {
-            if (vol < 0.3) {
-                vol += 0.01;
-                audio.volume = vol;
-            } else {
-                clearInterval(fadeIn);
-            }
-        }, 100);
-
-        // Remove listeners after first trigger
-        document.removeEventListener('click', tryPlay, { passive: true });
-        document.removeEventListener('keydown', tryPlay, { passive: true });
-        document.removeEventListener('scroll', tryPlay, { passive: true });
-        document.removeEventListener('touchstart', tryPlay, { passive: true });
     };
 
-    // Listen for any gesture (including touch)
     document.addEventListener('click', tryPlay, { passive: true });
     document.addEventListener('keydown', tryPlay, { passive: true });
     document.addEventListener('scroll', tryPlay, { passive: true });
