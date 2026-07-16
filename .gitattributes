@@ -1,0 +1,2 @@
+*.sh text eol=lf
+vercel-build.sh text eol=lf
